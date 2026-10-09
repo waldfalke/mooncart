@@ -12,8 +12,8 @@
 
 ## Независимый архивный replay
 
-Агент со свежим контекстом получил действующий скилл, публичный URL и реальный локальный snapshot первоначального barrier. Это архивный replay, не текущий живой браузерный запуск. Исходный снимок не распространяется; самостоятельные проверки публичного контракта используют синтетическую fixture `evals/schema/blocked-order-draft.json`.
+Агент со свежим контекстом получил скилл, URL и архивный snapshot страницы с барьером. Это replay, не текущий живой браузерный запуск. Воспроизводимые локальные проверки используют синтетическую fixture `evals/schema/blocked-order-draft.json`.
 
-Агент записал настоящий временный `order-draft.json` вне `stand/`, чтобы не создавать лишнюю shopping-session. Сохранены только безопасный URL и evidence; имя/валюта — null, товары — пустой массив. Отдельные blockers: `human_verification` на `/items`, `merchant_name_unobserved` и `merchant_currency_unobserved`. Артефакт явно помечен issue `archive_replay`. Товар не восстановлен из URL; служебные идентификаторы challenge не перенесены.
+В сохранённом `order-draft.json`: безопасный URL и evidence; имя/валюта — null, товары — пустой массив. Отдельные blockers: `human_verification` на `/items`, `merchant_name_unobserved` и `merchant_currency_unobserved`. Артефакт помечен issue `archive_replay`. Товар не восстановлен из URL; служебные идентификаторы challenge не перенесены.
 
 Validator агента завершился с кодом 0. Автор независимо повторил validator и проверил фактические `status == captured`, `items == []`, null name/currency. Оба шага успешны. Проверка подтверждает сохранение раннего барьера и применение инструкции к архивному входу, но не доказывает прохождение нового CAPTCHA или текущую доступность магазина.

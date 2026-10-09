@@ -16,7 +16,7 @@
   "evidence": [
     {
       "kind": "user_screenshot",
-      "scope": "Видимые labels, обязательность по звёздочкам и сообщения об ошибках. Исходный пользовательский снимок не распространяется."
+      "scope": "Видимые labels, обязательность по звёздочкам и сообщения об ошибках."
     },
     {
       "kind": "user_transcription",
@@ -24,22 +24,22 @@
     },
     {
       "kind": "user_report",
-      "scope": "В наблюдавшемся случае валюта не определялась и её нельзя было выбрать; из-за этого покупка не состоялась. Текущее состояние сайта не установлено этим сообщением."
+      "scope": "Сообщение о недоступной валюте без возможности выбора. Не подтверждает текущее состояние сайта."
     },
     {
       "kind": "live_browser",
       "observed_at": "2026-10-09T17:17:01+03:00",
-      "scope": "После ручного входа пользователя: Germany -> доступный Лейпциг и €; переключение на США показало $, возврат к Германии снова €. Строка товара пустая; склад не выбран; отправка не выполнялась."
+      "scope": "Германия -> доступный Лейпциг и €; США -> $; возврат к Германии -> €."
     },
     {
       "kind": "live_browser",
       "observed_at": "2026-10-09T17:53:25+03:00",
-      "scope": "Повторно открыта авторизованная форма. DOM-id, labels и типы контролов прочитаны для заявки и двух добавленных пустых товарных строк (индексы 0 и 1). Наблюдены видимый Select2 combobox и отдельное поле поиска категории. Данные покупки, политика изменения цены и оферта не вводились; отправки не было."
+      "scope": "DOM-id, labels и типы контролов заявки и двух пустых товарных строк (индексы 0 и 1). Видимый Select2 combobox и отдельное поле поиска категории."
     },
     {
       "kind": "live_browser",
       "observed_at": "2026-10-09T18:22:03+03:00",
-      "scope": "Форма восстановлена из prepared JSON и перечитана. Валюта € отображается возле цены; DOM wrapper имеет data-content=€, обычный innerText этот CSS-generated знак не содержит. Товарные значения исключены из публичного отчёта; политика/оферта выключены, отправки не было."
+      "scope": "Валюта € отображается возле цены; DOM wrapper имеет data-content=€, обычный innerText этот CSS-generated знак не содержит."
     }
   ],
   "request_fields": [
@@ -157,7 +157,7 @@
   "incident": {
     "code": "partner_currency_unavailable",
     "basis": "user_report",
-    "description": "Валюта не определялась; пользователь не мог выбрать её и не заказал товар.",
+    "description": "Валюта не определялась и была недоступна для выбора.",
     "current_reproduction": "not_reproduced_currency_display_available",
     "expected_agent_outcome": "Сохранить данные магазина, сообщить о блокере формы и оставить handoff незавершённым."
   },
@@ -166,25 +166,5 @@
     "Допустимый формат числового ввода цены.",
     "Полный список типов товаров и складов для других стран.",
     "Помощь по значкам вопроса, кроме названия товара, не проверена."
-  ],
-  "live_probe": {
-    "observed_at": "2026-10-09T16:40:31+03:00",
-    "browser": "Playwright CLI в отдельной Chrome-сессии и встроенный браузер Codex; авторизованная вкладка СДЭК в подключённых браузерах не найдена",
-    "form_result": "redirected_to_login",
-    "list_result": "redirected_to_login",
-    "observed_url": "https://global.cdek.ru/login",
-    "currency_bug_status": "not_reproduced_authentication_blocker",
-    "submitted": false
-  },
-  "authenticated_probe": {
-    "observed_at": "2026-10-09T17:17:01+03:00",
-    "browser": "Встроенный браузер Codex, ручной вход пользователя",
-    "form_result": "form_available",
-    "currency_bug_status": "not_reproduced_currency_display_available",
-    "country_switch_observations": ["Германия: €", "США: $", "Германия: €"],
-    "warehouse_selected": false,
-    "item_fields_filled": false,
-    "offer_accepted": false,
-    "submitted": false
-  }
+  ]
 }

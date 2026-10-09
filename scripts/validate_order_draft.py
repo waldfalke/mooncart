@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import math
 from pathlib import Path
+import re
 import sys
 from urllib.parse import urlsplit
 
@@ -9,11 +11,15 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 
 SENSITIVE_KEYS = {
+    "access_token",
     "account",
     "account_id",
     "address",
+    "api_key",
+    "authorization",
     "card",
     "card_number",
+    "client_secret",
     "cookie",
     "cookies",
     "cvc",
@@ -58,17 +64,63 @@ def commercial_paths(draft):
 
 def covers(paths, required_path):
     return any(
-        path == required_path or required_path.startswith(path.rstrip("/") + "/")
+        path == required_path or required_path.startswith(path + "/")
         for path in paths
     )
 
 
 def resolve_pointer(document, pointer):
+    if not pointer.startswith("/") or re.search(r"~(?![01])", pointer):
+        raise ValueError("invalid JSON Pointer")
     value = document
-    for raw_part in pointer.lstrip("/").split("/"):
+    for raw_part in pointer[1:].split("/"):
         part = raw_part.replace("~1", "/").replace("~0", "~")
-        value = value[int(part)] if isinstance(value, list) else value[part]
+        if isinstance(value, list):
+            if not re.fullmatch(r"0|[1-9][0-9]*", part):
+                raise ValueError("invalid array index")
+            value = value[int(part)]
+        elif isinstance(value, dict):
+            value = value[part]
+        else:
+            raise TypeError("pointer traverses a scalar")
     return value
+
+
+def finite_number(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError("non-finite JSON number")
+    return number
+
+
+def unique_object(pairs):
+    value = {}
+    for key, child in pairs:
+        if key in value:
+            raise ValueError("duplicate JSON object field")
+        value[key] = child
+    return value
+
+
+def web_origin(url):
+    if "\\" in url or any(ord(char) <= 32 or ord(char) == 127 for char in url):
+        raise ValueError("URL contains whitespace, controls or backslashes")
+    parsed = urlsplit(url)
+    host = parsed.hostname
+    if parsed.scheme not in {"http", "https"} or not host:
+        raise ValueError("URL must have an HTTP(S) scheme and host")
+    if not host.isascii() or any(char in "%/#?@[]<>^|" for char in host):
+        raise ValueError("URL must use the browser-normalized ASCII host")
+    if parsed.netloc.startswith("[") and not re.fullmatch(
+        r"\[[0-9a-fA-F:.]+\](?::[0-9]+)?", parsed.netloc
+    ):
+        raise ValueError("invalid bracketed web host")
+    if parsed.username is not None or parsed.password is not None or parsed.query or parsed.fragment:
+        raise ValueError("URL must contain only scheme, host and path")
+    port = parsed.port
+    return parsed.scheme, host, port if port is not None else (
+        443 if parsed.scheme == "https" else 80
+    )
 
 
 def iter_keys(value, path=""):
@@ -97,9 +149,15 @@ def iter_urls(draft):
 
 def semantic_errors(draft):
     errors = []
-    evidence_paths = {
-        path for evidence in draft["evidence"] for path in evidence["paths"]
-    }
+    evidence_paths = set()
+    for evidence in draft["evidence"]:
+        for path in evidence["paths"]:
+            try:
+                resolve_pointer(draft, path)
+            except (KeyError, IndexError, TypeError, ValueError):
+                errors.append(f"evidence field is not a draft pointer: {path}")
+            else:
+                evidence_paths.add(path)
     for required_path in commercial_paths(draft):
         if not covers(evidence_paths, required_path):
             errors.append(f"missing evidence for {required_path}")
@@ -133,12 +191,22 @@ def semantic_errors(draft):
         if key.lower().replace("-", "_") in SENSITIVE_KEYS:
             errors.append(f"sensitive field key: {path}")
 
+    origins = {}
     for path, url in iter_urls(draft):
-        parsed = urlsplit(url)
-        if parsed.scheme not in {"http", "https"}:
-            errors.append(f"non-web URL at {path}")
-        if parsed.username or parsed.password or parsed.query or parsed.fragment:
-            errors.append(f"URL must contain only scheme, host and path: {path}")
+        try:
+            origins[path] = web_origin(url)
+        except ValueError:
+            errors.append(f"invalid or unsafe web URL at {path}")
+
+    readback_paths = set()
+    form_origin = origins.get("/route/form_url")
+    for index, evidence in enumerate(draft["evidence"]):
+        if evidence["method"] != "form_readback":
+            continue
+        if form_origin is None or origins.get(f"/evidence/{index}/source_url") != form_origin:
+            errors.append(f"form_readback source differs from selected form origin: /evidence/{index}")
+            continue
+        readback_paths.update(evidence["paths"])
 
     if draft["status"] == "prepared":
         verified = set(draft["handoff"]["verified_fields"])
@@ -164,12 +232,6 @@ def semantic_errors(draft):
         for path in required_verified:
             if not covers(verified, path):
                 errors.append(f"prepared field was not read back: {path}")
-        readback_paths = {
-            path
-            for evidence in draft["evidence"]
-            if evidence["method"] == "form_readback"
-            for path in evidence["paths"]
-        }
         for path in verified:
             try:
                 resolve_pointer(draft, path)
@@ -189,8 +251,13 @@ def main():
         schema = json.loads(
             (skill_root / "schemas/order-draft.schema.json").read_text(encoding="utf-8")
         )
-        draft = json.loads(args.draft.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
+        draft = json.loads(
+            args.draft.read_text(encoding="utf-8"),
+            parse_float=finite_number,
+            parse_constant=finite_number,
+            object_pairs_hook=unique_object,
+        )
+    except (OSError, ValueError) as error:
         print(f"invalid: {error}", file=sys.stderr)
         return 1
 

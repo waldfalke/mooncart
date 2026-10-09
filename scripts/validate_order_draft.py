@@ -243,7 +243,7 @@ def semantic_errors(draft):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Validate a Prosumer order draft")
+    parser = argparse.ArgumentParser(description="Validate a Mooncart order draft")
     parser.add_argument("draft", type=Path)
     args = parser.parse_args()
     skill_root = Path(__file__).parents[1]

@@ -1,4 +1,4 @@
-# Паспорт `prosumer`
+# Паспорт `mooncart`
 
 ## Начало работы
 
@@ -32,14 +32,14 @@
 | Назначение | Путь |
 |---|---|
 | Вход и рабочий контракт | `SKILL.md` |
-| Паспорт | `PASSPORT-prosumer.md` |
+| Паспорт | `PASSPORT-mooncart.md` |
 | Схема данных | `schemas/order-draft.schema.json` |
 | Исполняемая проверка | `scripts/validate_order_draft.py` |
 | Семантика полей и пример | `references/order-draft.md` |
 | Наблюдённый профиль СДЭК | `references/partners/cdek-forward-buyout.json` |
 | Сценарии и результаты проверок | `evals/` |
 | Приватные рабочие данные | `stand/<shopping-session-id>/order-draft.json` |
-| Устройство и внешние референсы | `docs/2026-10-09-prosumer-design.md` |
+| Устройство и внешние референсы | `docs/2026-10-09-mooncart-design.md` |
 
 ## Доступ
 

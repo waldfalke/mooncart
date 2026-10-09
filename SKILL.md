@@ -1,9 +1,9 @@
 ---
-name: prosumer
+name: mooncart
 description: Use when a user wants to preserve a product or online-store cart across browser sessions, resume a shopping transfer, or prepare item data in a parcel-forwarder or buyout form, especially when exact variants, prices, and provenance must survive between sites.
 ---
 
-# Prosumer
+# Mooncart
 
 **REQUIRED SUB-SKILL:** Use `playwright` for browser actions.
 
@@ -15,7 +15,7 @@ Move only browser-observed commerce data through one local `order-draft.json`:
 
 The draft is the boundary between browser sessions. A browser action is not complete until its result is observed; an unobserved value is an issue, never a guess.
 
-Before the first action in a run, read [PASSPORT-prosumer.md](PASSPORT-prosumer.md). Before creating or changing a draft, read [references/order-draft.md](references/order-draft.md). After every write, run `python <skill-root>/scripts/validate_order_draft.py <draft>`; the script owns both schema and semantic validation.
+Before the first action in a run, read [PASSPORT-mooncart.md](PASSPORT-mooncart.md). Before creating or changing a draft, read [references/order-draft.md](references/order-draft.md). After every write, run `python <skill-root>/scripts/validate_order_draft.py <draft>`; the script owns both schema and semantic validation.
 
 ## Actions
 

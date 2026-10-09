@@ -3,12 +3,13 @@ README.md
 requirements.txt
 PUBLIC_SURFACE.txt
 SKILL.md
-PASSPORT-prosumer.md
+PASSPORT-mooncart.md
+assets/mooncart-banner.png
 schemas/order-draft.schema.json
 scripts/validate_order_draft.py
 references/order-draft.md
 references/partners/cdek-forward-buyout.json
-docs/2026-10-09-prosumer-design.md
+docs/2026-10-09-mooncart-design.md
 evals/baseline.md
 evals/green.md
 evals/capture-single-item/scenario.md

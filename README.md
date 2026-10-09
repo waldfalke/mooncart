@@ -1,10 +1,12 @@
-# Prosumer
+# Mooncart
+
+![Маленький Принц примеряет новые кроссовки на своей Луне; рядом Лис и роза.](assets/mooncart-banner.png)
 
 Зарубежный магазин не доставляет в Россию или не принимает ваш способ оплаты?
 Для таких покупок есть сервисы выкупа и пересылки: вы выбираете товары, а партнёр
 выкупает их и организует доставку.
 
-Prosumer — скилл Codex, который помогает быстрее перейти от поиска товаров с агентом
+Mooncart — скилл Codex, который помогает быстрее перейти от поиска товаров с агентом
 и страниц магазина к готовой заявке в выбранном сервисе выкупа. Особенно удобно
 на распродажах: собранную корзину не нужно вручную переносить в форму партнёра.
 
@@ -25,12 +27,12 @@ Prosumer — скилл Codex, который помогает быстрее п
 Скачайте репозиторий и установите Python-зависимость в окружение, которым пользуется агент:
 
 ```sh
-git clone https://github.com/waldfalke/prosumer.git
-cd prosumer
+git clone https://github.com/waldfalke/mooncart.git
+cd mooncart
 python -m pip install -r requirements.txt
 ```
 
-Разместите папку `prosumer` в своём каталоге skills Codex (обычно `~/.codex/skills/`, либо
+Разместите папку `mooncart` в своём каталоге skills Codex (обычно `~/.codex/skills/`, либо
 `skills/` внутри настроенного `CODEX_HOME`). Playwright устанавливается отдельно.
 
 ## Примеры запросов
@@ -58,6 +60,6 @@ python scripts/validate_order_draft.py evals/schema/valid-order-draft.json
 ## Устройство
 
 - [SKILL.md](SKILL.md) — инструкции для модели.
-- [Паспорт](PASSPORT-prosumer.md) — назначение, границы и структура скилла.
+- [Паспорт](PASSPORT-mooncart.md) — назначение, границы и структура скилла.
 - [Правила данных](references/order-draft.md) и [схема](schemas/order-draft.schema.json).
 - [Профиль СДЭК](references/partners/cdek-forward-buyout.json) — поля формы и сохранённые локаторы.

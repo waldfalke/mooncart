@@ -1,8 +1,8 @@
-# Prosumer — design
+# Mooncart — design
 
 ## Architecture
 
-`prosumer` is a Codex skill for transferring selected shopping data between sites.
+`mooncart` is a Codex skill for transferring selected shopping data between sites.
 It captures one selected product or one merchant cart through Playwright, preserves the observed
 facts in a local JSON order draft, and later uses Playwright to prepare the corresponding form of
 a chosen forwarding or buyout partner.

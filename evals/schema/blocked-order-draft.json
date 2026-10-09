@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "session_id": "20261009-example-blocked",
+  "status": "captured",
+  "captured_at": "2026-10-09T19:00:00+03:00",
+  "validated_at": null,
+  "prepared_at": null,
+  "merchant": {
+    "name": null,
+    "page_url": "https://merchant.example/cart",
+    "currency": null
+  },
+  "items": [],
+  "evidence": [
+    {
+      "paths": ["/merchant/page_url"],
+      "source_url": "https://merchant.example/cart",
+      "observed_at": "2026-10-09T19:00:00+03:00",
+      "method": "page_url"
+    }
+  ],
+  "issues": [
+    { "code": "merchant_unobserved", "field": "/merchant/name", "message": "Merchant identity was not visible.", "severity": "blocker" },
+    { "code": "currency_unobserved", "field": "/merchant/currency", "message": "Currency was not visible.", "severity": "blocker" },
+    { "code": "items_unobserved", "field": "/items", "message": "Login or challenge prevented observation of product rows.", "severity": "blocker" }
+  ]
+}

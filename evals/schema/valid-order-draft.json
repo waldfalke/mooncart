@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "session_id": "20261009-190000-example-sports",
+  "status": "validated",
+  "captured_at": "2026-10-09T19:00:00+03:00",
+  "validated_at": "2026-10-09T19:02:00+03:00",
+  "prepared_at": null,
+  "merchant": {
+    "name": "Example Sports",
+    "page_url": "https://merchant.example/cart",
+    "currency": "USD"
+  },
+  "items": [
+    {
+      "line_id": "line-001",
+      "product_url": "https://merchant.example/items/court-shoe",
+      "title": "Court Shoe",
+      "sku": "CS-BW-425",
+      "variant": {
+        "color": "Black / White",
+        "size": "EU 42.5"
+      },
+      "quantity": 1,
+      "unit_price": 70.0,
+      "line_total": 70.0
+    }
+  ],
+  "totals": {
+    "subtotal": 70.0,
+    "discount": 0.0,
+    "merchant_shipping": null,
+    "total": 70.0
+  },
+  "evidence": [
+    {
+      "paths": [
+        "/merchant/name",
+        "/merchant/currency",
+        "/items/0/title",
+        "/items/0/sku",
+        "/items/0/variant",
+        "/items/0/quantity",
+        "/items/0/unit_price",
+        "/items/0/line_total",
+        "/totals/subtotal",
+        "/totals/discount",
+        "/totals/total"
+      ],
+      "source_url": "https://merchant.example/cart",
+      "observed_at": "2026-10-09T19:00:00+03:00",
+      "method": "visible_text"
+    },
+    {
+      "paths": ["/merchant/page_url", "/items/0/product_url"],
+      "source_url": "https://merchant.example/cart",
+      "observed_at": "2026-10-09T19:00:00+03:00",
+      "method": "page_url"
+    }
+  ],
+  "issues": []
+}

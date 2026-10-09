@@ -1,0 +1,190 @@
+{
+  "profile_version": "0.3",
+  "partner_id": "cdek-forward",
+  "flow": "buyout-request",
+  "observed_on": "2026-10-09",
+  "form_title": "Оставить заявку на покупку товаров",
+  "form_url": "https://global.cdek.ru/office/buyout/create-request",
+  "list_url": "https://global.cdek.ru/office/buyout/list",
+  "locator_cache": {
+    "observed_at": "2026-10-09T17:53:25+03:00",
+    "source_url": "https://global.cdek.ru/office/buyout/create-request",
+    "item_row_selector_template": "#buyout_request_products_{row_index}",
+    "observed_row_indices": [0, 1],
+    "row_index_note": "Индекс DOM, а не номер строки draft. Установить соответствие по живым строкам; после добавления или удаления перечитать их индексы."
+  },
+  "evidence": [
+    {
+      "kind": "user_screenshot",
+      "scope": "Видимые labels, обязательность по звёздочкам и сообщения об ошибках. Исходный пользовательский снимок не распространяется."
+    },
+    {
+      "kind": "user_transcription",
+      "scope": "Список стран, варианты изменения цены и полный текст формы."
+    },
+    {
+      "kind": "user_report",
+      "scope": "В наблюдавшемся случае валюта не определялась и её нельзя было выбрать; из-за этого покупка не состоялась. Текущее состояние сайта не установлено этим сообщением."
+    },
+    {
+      "kind": "live_browser",
+      "observed_at": "2026-10-09T17:17:01+03:00",
+      "scope": "После ручного входа пользователя: Germany -> доступный Лейпциг и €; переключение на США показало $, возврат к Германии снова €. Строка товара пустая; склад не выбран; отправка не выполнялась."
+    },
+    {
+      "kind": "live_browser",
+      "observed_at": "2026-10-09T17:53:25+03:00",
+      "scope": "Повторно открыта авторизованная форма. DOM-id, labels и типы контролов прочитаны для заявки и двух добавленных пустых товарных строк (индексы 0 и 1). Наблюдены видимый Select2 combobox и отдельное поле поиска категории. Данные покупки, политика изменения цены и оферта не вводились; отправки не было."
+    },
+    {
+      "kind": "live_browser",
+      "observed_at": "2026-10-09T18:22:03+03:00",
+      "scope": "Форма восстановлена из prepared JSON и перечитана. Валюта € отображается возле цены; DOM wrapper имеет data-content=€, обычный innerText этот CSS-generated знак не содержит. Товарные значения исключены из публичного отчёта; политика/оферта выключены, отправки не было."
+    }
+  ],
+  "request_fields": [
+    {
+      "id": "merchant_country",
+      "label": "Страна интернет магазина",
+      "locator": { "strategy": "css", "selector": "#buyout_request_country", "tag": "SELECT" },
+      "required": true,
+      "choices_from_transcription": ["США", "Великобритания", "Италия", "Финляндия", "ОАЭ", "Испания", "Польша", "Германия", "Турция", "Таиланд", "Казахстан", "Гонконг", "Литва", "Венгрия", "Эстония", "Корея", "Вьетнам", "Португалия"],
+      "observed_value": "Германия",
+      "default": null
+    },
+    {
+      "id": "warehouse",
+      "label": "Склад",
+      "locator": { "strategy": "css", "selector": "#buyout_request_stock", "tag": "SELECT" },
+      "required": true,
+      "observed_value": "Лейпциг",
+      "observed_country": "Германия",
+      "choices_inventory_complete": false,
+      "live_choices_by_country": {
+        "Германия": ["Лейпциг"]
+      },
+      "default": null
+    },
+    {
+      "id": "comment",
+      "label": "Комментарий",
+      "locator": { "strategy": "css", "selector": "#buyout_request_comment", "tag": "TEXTAREA" },
+      "required": false,
+      "observed_value": ""
+    },
+    {
+      "id": "price_change_policy",
+      "label": "Что делать, если цена изменится?",
+      "locator": { "strategy": "css", "selector": "#buyout_request_whatIfCostRise", "tag": "DIV" },
+      "required": true,
+      "choices": [
+        "Выкупать товар только по указанной цене",
+        "Выкупать товар при увеличении цены до 10%",
+        "Выкупать товар при увеличении цены до 30%",
+        "Выкупать товар в любом случае"
+      ],
+      "default": null,
+      "value_authority": "user"
+    }
+  ],
+  "item_fields": [
+    {
+      "id": "product_url", "label": "Ссылка на товар", "required": true,
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_link", "tag": "INPUT", "input_type": "text" }
+    },
+    {
+      "id": "item_type",
+      "label": "Тип товара",
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_productType", "tag": "SELECT", "purpose": "readback" },
+      "interaction_locator": { "strategy": "css", "selector": "[role=\"combobox\"][aria-labelledby=\"select2-buyout_request_products_{row_index}_productType-container\"]", "role": "combobox" },
+      "search_locator": { "strategy": "css", "selector": "input[role=\"searchbox\"][aria-controls=\"select2-buyout_request_products_{row_index}_productType-results\"]", "role": "searchbox" },
+      "options_locator": { "strategy": "css", "selector": "#select2-buyout_request_products_{row_index}_productType-results", "role": "listbox" },
+      "required": true,
+      "observed_value": "Обувь > Кроссовки",
+      "choices_inventory_complete": false
+    },
+    {
+      "id": "title",
+      "label": "Название товара",
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_name", "tag": "INPUT", "input_type": "text" },
+      "required": true,
+      "example_from_form": "New Balance, Athletic Sneakers, Black, 9M",
+      "input_guidance": "Наблюдённая подсказка просит английское название с цветом/размером для идентификации товара на складе."
+    },
+    {
+      "id": "brand", "label": "Бренд", "required": true,
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_brand", "tag": "INPUT", "input_type": "text" }
+    },
+    {
+      "id": "color_size", "label": "Цвет/размер", "required": false,
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_color_size", "tag": "INPUT", "input_type": "text" }
+    },
+    {
+      "id": "quantity", "label": "Количество в шт.", "required": true, "unit": "шт.",
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_quantity", "tag": "INPUT", "input_type": "text" }
+    },
+    {
+      "id": "unit_price",
+      "label": "Стоимость за шт.",
+      "locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_cost", "tag": "INPUT", "input_type": "text" },
+      "currency_display_locator": { "strategy": "css", "selector": "#buyout_request_products_{row_index}_cost", "element_relation": "parent", "attribute": "data-content" },
+      "currency_display_note": "CSS-generated знак наблюдён в live snapshot; parent.innerText его не возвращает. Проверять связанное отображение и data-content, не объявлять отсутствие валюты только по innerText. Самостоятельный control выбора валюты не наблюдался.",
+      "required": true,
+      "observed_error": "Значение недопустимо",
+      "accepted_number_format": null,
+      "currency_control_observed": false,
+      "currency_resolution": "country_dependent_display_observed",
+      "live_currency_display_by_country": {
+        "Германия": "€",
+        "США": "$"
+      },
+      "server_acceptance_verified": false
+    }
+  ],
+  "controls": {
+    "add_item_label": "Добавить товар",
+    "add_item_locator": { "strategy": "text", "text": "Добавить товар", "exact": true },
+    "submit_label": "Отправить",
+    "cancel_label": "Отмена",
+    "offer_label": "Я соглашаюсь с публичной офертой",
+    "offer_locator": { "strategy": "css", "selector": "#buyout_request_agree", "tag": "INPUT", "input_type": "checkbox", "purpose": "readback" },
+    "offer_checkbox_authority": "user"
+  },
+  "observed_errors": [
+    { "field": null, "message": "Значение не должно быть пустым." },
+    { "field": "unit_price", "message": "Значение недопустимо" }
+  ],
+  "incident": {
+    "code": "partner_currency_unavailable",
+    "basis": "user_report",
+    "description": "Валюта не определялась; пользователь не мог выбрать её и не заказал товар.",
+    "current_reproduction": "not_reproduced_currency_display_available",
+    "expected_agent_outcome": "Сохранить данные магазина, сообщить о блокере формы и оставить handoff незавершённым."
+  },
+  "open_observations": [
+    "Принятие цены и валюты сервером не проверено: заявку не отправляли.",
+    "Допустимый формат числового ввода цены.",
+    "Полный список типов товаров и складов для других стран.",
+    "Помощь по значкам вопроса, кроме названия товара, не проверена."
+  ],
+  "live_probe": {
+    "observed_at": "2026-10-09T16:40:31+03:00",
+    "browser": "Playwright CLI в отдельной Chrome-сессии и встроенный браузер Codex; авторизованная вкладка СДЭК в подключённых браузерах не найдена",
+    "form_result": "redirected_to_login",
+    "list_result": "redirected_to_login",
+    "observed_url": "https://global.cdek.ru/login",
+    "currency_bug_status": "not_reproduced_authentication_blocker",
+    "submitted": false
+  },
+  "authenticated_probe": {
+    "observed_at": "2026-10-09T17:17:01+03:00",
+    "browser": "Встроенный браузер Codex, ручной вход пользователя",
+    "form_result": "form_available",
+    "currency_bug_status": "not_reproduced_currency_display_available",
+    "country_switch_observations": ["Германия: €", "США: $", "Германия: €"],
+    "warehouse_selected": false,
+    "item_fields_filled": false,
+    "offer_accepted": false,
+    "submitted": false
+  }
+}
